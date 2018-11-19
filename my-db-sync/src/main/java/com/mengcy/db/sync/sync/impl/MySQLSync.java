@@ -15,27 +15,30 @@
  */
 package com.mengcy.db.sync.sync.impl;
 
-import com.mengcy.db.sync.entity.JobInfo;
+import com.mengcy.db.sync.task.entity.JobInfo;
 import com.mengcy.db.sync.sync.DBSync;
+import com.mengcy.db.sync.task.plugin.IPlugin;
 import com.mengcy.db.sync.utils.Tool;
 import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author mengcy
+ * @version 1.0.0
  * @date 2018/11/11 10:21
  * @description MySQL数据库同步实现
- * @version 1.0.0
  */
 public class MySQLSync extends AbstractDBSync implements DBSync {
+
     private Logger logger = Logger.getLogger(MySQLSync.class);
 
     @Override
     public String assembleSQL(String srcSql, Connection conn, JobInfo jobInfo) throws SQLException {
+
         String uniqueName = Tool.generateString(6) + "_" + jobInfo.getName();
         String[] fields = jobInfo.getDestTableFields().split(",");
         fields = this.trimArrayItem(fields);
@@ -46,12 +49,18 @@ public class MySQLSync extends AbstractDBSync implements DBSync {
         PreparedStatement pst = conn.prepareStatement(srcSql);
         ResultSet rs = pst.executeQuery();
         StringBuffer sql = new StringBuffer();
-        sql.append("insert into ").append(jobInfo.getDestTable()).append(" (").append(jobInfo.getDestTableFields()).append(") values ");
+        sql.append("insert into ")
+                .append(jobInfo.getDestTable())
+                .append(" (")
+                .append(jobInfo.getDestTableFields())
+                .append(") values ");
         long count = 0;
         while (rs.next()) {
             sql.append("(");
             for (int index = 0; index < fields.length; index++) {
-                sql.append("'").append(rs.getString(fields[index])).append(index == (fields.length - 1) ? "'" : "',");
+                sql.append("'")
+                        .append(rs.getString(fields[index]))
+                        .append(index == (fields.length - 1) ? "'" : "',");
             }
             sql.append("),");
             count++;
@@ -79,7 +88,9 @@ public class MySQLSync extends AbstractDBSync implements DBSync {
     }
 
     @Override
-    public void executeSQL(String sql, Connection conn) throws SQLException {
+    public void executeSQL(String sql, Connection conn, List<IPlugin> plugins) throws SQLException {
+
+        // todo 数据插件处理
         PreparedStatement pst = conn.prepareStatement("");
         String[] sqlList = sql.split(";");
         for (int index = 0; index < sqlList.length; index++) {

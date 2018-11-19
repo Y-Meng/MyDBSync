@@ -15,7 +15,7 @@
  */
 package com.mengcy.db.sync.sync.impl;
 
-import com.mengcy.db.sync.entity.JobInfo;
+import com.mengcy.db.sync.task.entity.JobInfo;
 import com.mengcy.db.sync.sync.DBSync;
 import org.apache.log4j.Logger;
 

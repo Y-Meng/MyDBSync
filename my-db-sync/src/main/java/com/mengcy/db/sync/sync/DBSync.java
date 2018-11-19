@@ -15,10 +15,12 @@
  */
 package com.mengcy.db.sync.sync;
 
-import com.mengcy.db.sync.entity.JobInfo;
+import com.mengcy.db.sync.task.entity.JobInfo;
+import com.mengcy.db.sync.task.plugin.IPlugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author mengcy
@@ -28,7 +30,7 @@ import java.sql.SQLException;
  */
 public interface DBSync {
     /**
-     *
+     * 组装SQL
      * @param paramString:同步参数
      * @param paramConnection：数据库连接
      * @param paramJobInfo：同步任务
@@ -37,10 +39,11 @@ public interface DBSync {
      */
     String assembleSQL(String paramString, Connection paramConnection, JobInfo paramJobInfo) throws SQLException;
     /**
-     *
+     * 执行SQL
      * @param sql：要执行的SQL语句
      * @param conn：数据库连接
+     * @param plugins: 数据处理插件列表
      * @throws SQLException
      */
-    void executeSQL(String sql, Connection conn) throws SQLException;
+    void executeSQL(String sql, Connection conn, List<IPlugin> plugins) throws SQLException;
 }

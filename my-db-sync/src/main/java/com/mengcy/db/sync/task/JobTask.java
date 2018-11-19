@@ -16,8 +16,8 @@
 package com.mengcy.db.sync.task;
 
 import com.mengcy.db.sync.factory.DBSyncFactory;
-import com.mengcy.db.sync.entity.DBInfo;
-import com.mengcy.db.sync.entity.JobInfo;
+import com.mengcy.db.sync.task.entity.DBInfo;
+import com.mengcy.db.sync.task.entity.JobInfo;
 import com.mengcy.db.sync.sync.DBSync;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -36,6 +36,7 @@ import java.util.Date;
  * @version 1.0.0
  */
 public class JobTask implements Job {
+
     private Logger logger = Logger.getLogger(JobTask.class);
 
     /**
@@ -71,9 +72,9 @@ public class JobTask implements Job {
             String sql = dbHelper.assembleSQL(jobInfo.getSrcSql(), inConn, jobInfo);
             this.logger.info("组装SQL耗时: " + (System.currentTimeMillis() - start) + "ms");
             if (sql != null) {
-                this.logger.debug(sql);
+                this.logger.info(sql);
                 long eStart = System.currentTimeMillis();
-                dbHelper.executeSQL(sql, outConn);
+                dbHelper.executeSQL(sql, outConn, null);
                 this.logger.info("执行SQL耗时: " + (System.currentTimeMillis() - eStart) + "ms");
             }
         } catch (SQLException e) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.mengcy.db.sync.entity;
+package com.mengcy.db.sync.task.entity;
 
 import java.io.Serializable;
 
@@ -24,6 +24,7 @@ import java.io.Serializable;
  * @version 1.0.0
  */
 public class JobInfo implements Serializable {
+
     private static final long serialVersionUID = -1907092113028096170L;
 
     //任务名称

@@ -16,8 +16,8 @@
 package com.mengcy.db.sync.build;
 
 import com.mengcy.db.sync.constants.Constants;
-import com.mengcy.db.sync.entity.DBInfo;
-import com.mengcy.db.sync.entity.JobInfo;
+import com.mengcy.db.sync.task.entity.DBInfo;
+import com.mengcy.db.sync.task.entity.JobInfo;
 import com.mengcy.db.sync.task.JobTask;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
@@ -79,11 +79,9 @@ public class DBSyncBuilder {
             Element dest = root.element("dest");
             Element jobs = root.element("jobs");
             // 遍历job即同步的表
-            for (@SuppressWarnings("rawtypes")
-                 Iterator it = jobs.elementIterator("job"); it.hasNext();) {
-                jobList.add((JobInfo) elementInObject((Element) it.next(), new JobInfo()));
+            for (Iterator it = jobs.elementIterator("job"); it.hasNext();) {
+                 jobList.add((JobInfo) elementInObject((Element) it.next(), new JobInfo()));
             }
-            //
             elementInObject(src, srcDb);
             elementInObject(dest, destDb);
             code = root.element("code").getTextTrim();
