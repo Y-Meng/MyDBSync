@@ -17,9 +17,10 @@ package com.mengcy.db.sync.sync.impl;
 
 import com.mengcy.db.sync.task.entity.JobInfo;
 import com.mengcy.db.sync.sync.DBSync;
+import com.mengcy.db.sync.task.plugin.IPlugin;
 import org.apache.log4j.Logger;
-
 import java.sql.*;
+import java.util.List;
 
 /**
  * @author mengcy
@@ -28,6 +29,7 @@ import java.sql.*;
  * @version 1.0.0
  */
 public class SQLServerSync extends AbstractDBSync implements DBSync {
+
     private Logger logger = Logger.getLogger(SQLServerSync.class);
 
     @Override
@@ -68,7 +70,8 @@ public class SQLServerSync extends AbstractDBSync implements DBSync {
     }
 
     @Override
-    public void executeSQL(String sql, Connection conn) throws SQLException {
+    public void executeSQL(String sql, Connection conn, List<IPlugin> plugins) throws SQLException {
+
         PreparedStatement pst = conn.prepareStatement(sql);
         pst.executeUpdate();
         conn.commit();

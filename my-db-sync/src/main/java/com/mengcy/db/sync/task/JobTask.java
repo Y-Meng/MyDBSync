@@ -69,7 +69,7 @@ public class JobTask implements Job {
 
             DBSync dbHelper = DBSyncFactory.create(destDb.getDbtype());
             long start = System.currentTimeMillis();
-            String sql = dbHelper.assembleSQL(jobInfo.getSrcSql(), inConn, jobInfo);
+            String sql = dbHelper.assembleSQL(jobInfo.getSrcSql().replaceAll("\r\n",""), inConn, jobInfo);
             this.logger.info("组装SQL耗时: " + (System.currentTimeMillis() - start) + "ms");
             if (sql != null) {
                 this.logger.info(sql);

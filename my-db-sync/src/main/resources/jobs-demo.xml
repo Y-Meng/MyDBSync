@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <code>4500000001</code>
+    <source>
+        <url>jdbc:mysql://server-proxy.aimingtai.com:3306/yuqingdb</url>
+        <username>yuqingadmin</username>
+        <password>yuqingadmin123</password>
+        <dbtype>mysql</dbtype>
+        <driver>com.mysql.jdbc.Driver</driver>
+    </source>
+    <dest>
+        <url>jdbc:mysql://127.0.0.1:3306/yuqingdb</url>
+        <username>root</username>
+        <password>root110</password>
+        <dbtype>mysql</dbtype>
+        <driver>com.mysql.jdbc.Driver</driver>
+    </dest>
+    <jobs>
+        <job>
+            <name>用户表同步</name>
+            <cron>0/30 * * * * ?</cron>
+            <srcSql>select user_id, user_code, user_name, site_id, user_type, password from g_user_lib</srcSql>
+            <destTable>g_user_lib</destTable>
+            <destTableFields>user_id, user_code, user_name, site_id, user_type, password</destTableFields>
+            <destTableKey>user_id</destTableKey>
+            <destTableUpdate>user_code, user_name, site_id, user_type ,password</destTableUpdate>
+        </job>
+
+    </jobs>
+</root>

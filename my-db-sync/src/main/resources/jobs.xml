@@ -1,29 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <code>4500000001</code>
+    <code>101</code>
     <source>
-        <url>jdbc:mysql://10.2.2.231:3306/guanxing_medical</url>
-        <username>root</username>
-        <password>root</password>
+        <url>jdbc:mysql://server-proxy.aimingtai.com:3306/yuqingdb</url>
+        <username>yuqingadmin</username>
+        <password>yuqingadmin123</password>
         <dbtype>mysql</dbtype>
         <driver>com.mysql.jdbc.Driver</driver>
     </source>
     <dest>
-        <url>jdbc:mysql://127.0.0.1:3306/guanxing_medical</url>
+        <url>jdbc:mysql://127.0.0.1:3306/yuqingdb</url>
         <username>root</username>
-        <password>root</password>
+        <password>root110</password>
         <dbtype>mysql</dbtype>
         <driver>com.mysql.jdbc.Driver</driver>
     </dest>
     <jobs>
+
+        <!--<job>-->
+            <!--<name>租户表同步</name>-->
+            <!--<cron>0/30 * * * * ?</cron>-->
+            <!--<srcSql>select id, modify_time, create_time, te_name, te_end_date, te_web_root, te_logo, te_perm,-->
+                <!--te_expand_field, te_status, te_type, is_pay, order_id, parent_id, province_id, province_name,-->
+                <!--city_id, city_name, county_id, county_name from g_tenant where id=122</srcSql>-->
+            <!--<destTable>g_tenant</destTable>-->
+            <!--<destTableFields>id, modify_time, create_time, te_name, te_end_date, te_web_root, te_logo, te_perm,-->
+                <!--te_expand_field, te_status, te_type, is_pay, order_id, parent_id, province_id, province_name,-->
+                <!--city_id, city_name, county_id, county_name</destTableFields>-->
+            <!--<destTableKey>id</destTableKey>-->
+            <!--<destTableUpdate>modify_time, create_time, te_name, te_end_date, te_web_root, te_logo, te_perm,-->
+                <!--te_expand_field, te_status, te_type, is_pay, order_id, parent_id, province_id, province_name,-->
+                <!--city_id, city_name, county_id, county_name</destTableUpdate>-->
+        <!--</job>-->
+
         <job>
-            <name>1</name>
-            <cron>0/300 * * * * ?</cron>
-            <srcSql>select user_id, account,password from client_user</srcSql>
-            <destTable>client_user</destTable>
-            <destTableFields>user_id, account, password</destTableFields>
+            <name>部门表同步</name>
+            <cron>0/30 * * * * ?</cron>
+            <srcSql>select dept_id, site_id, dept_name, parent_id, order_id, dept_status, last_modify_time
+                from g_department_lib where site_id=122</srcSql>
+            <destTable>g_department_lib</destTable>
+            <destTableFields>dept_id, site_id, dept_name, parent_id, order_id, dept_status, last_modify_time</destTableFields>
+            <destTableKey>dept_id</destTableKey>
+            <destTableUpdate>site_id, dept_name, parent_id, order_id, dept_status, last_modify_time</destTableUpdate>
+        </job>
+
+        <job>
+            <name>角色表同步</name>
+            <cron>0/30 * * * * ?</cron>
+            <srcSql>role_id, role_name, site_id, menu_perm, column_perm, operate_perm, role_status, last_modify_time,
+                other_perm from g_role_lib where site_id=122</srcSql>
+            <destTable>g_role_lib</destTable>
+            <destTableFields>role_id, role_name, site_id, menu_perm, column_perm, operate_perm, role_status,
+                last_modify_time, other_perm</destTableFields>
+            <destTableKey>role_id</destTableKey>
+            <destTableUpdate>role_name, site_id, menu_perm, column_perm, operate_perm, role_status,
+                last_modify_time, other_perm</destTableUpdate>
+        </job>
+
+        <job>
+            <name>用户表同步</name>
+            <cron>0/30 * * * * ?</cron>
+            <srcSql>select user_id, user_code, user_name, site_id, dept_id, role_id, column_id, user_type, password,
+                email, phone, sms_on, sms_pattern, ext_field, user_status, last_modify_time, valid_day,
+                expire_time, province_id, province, city_id, city, county_id, county, user_perm,
+                login_time, login_ip, u_key, avatar, device_token, lx_account from g_user_lib where site_id=122</srcSql>
+            <destTable>g_user_lib</destTable>
+            <destTableFields>user_id, user_code, user_name, site_id, dept_id, role_id, column_id, user_type, password,
+                email, phone, sms_on, sms_pattern, ext_field, user_status, last_modify_time, valid_day,
+                expire_time, province_id, province, city_id, city, county_id, county, user_perm,
+                login_time, login_ip, u_key, avatar, device_token, lx_account</destTableFields>
             <destTableKey>user_id</destTableKey>
-            <destTableUpdate>account, password</destTableUpdate>
+            <destTableUpdate>user_code, user_name, site_id, dept_id, role_id, column_id, user_type, password,
+                email, phone, sms_on, sms_pattern, ext_field, user_status, last_modify_time, valid_day,
+                expire_time, province_id, province, city_id, city, county_id, county, user_perm,
+                login_time, login_ip, u_key, avatar, device_token, lx_account</destTableUpdate>
+        </job>
+
+        <job>
+            <name>配置表同步</name>
+            <cron>0/30 * * * * ?</cron>
+            <srcSql>select id, code, target_level, target_id, target_name, name, content, note, create_time,
+                modify_time, status g_config_lib</srcSql>
+            <destTable>g_config_lib</destTable>
+            <destTableFields>id, code, target_level, target_id, target_name, name, content, note, create_time,
+                modify_time, status</destTableFields>
+            <destTableKey>id</destTableKey>
+            <destTableUpdate>code, target_level, target_id, target_name, name, content, note, create_time,
+                modify_time, status</destTableUpdate>
+        </job>
+
+        <job>
+            <name>预警表同步</name>
+            <cron>0/30 * * * * ?</cron>
+            <srcSql>select id, report_url, report_title, report_pics, report_author, report_level, report_source,
+                catalog_name, catalog_id, report_region_id, report_region_name, report_org_id, report_org_name,
+                report_status, publish_time, column_id, column_name, site_id, dept_id, report_user_id,
+                report_user, report_time, review_user_id, review_user, review_time, review_note,
+                modify_user_id, modify_user, modify_time, sms_on, approval_note, approval_user, sms_group,
+                report_abstract, report_content from g_yq_caution where site_id=122</srcSql>
+            <destTable>g_yq_caution</destTable>
+            <destTableFields>id, report_url, report_title, report_pics, report_author, report_level, report_source,
+                catalog_name, catalog_id, report_region_id, report_region_name, report_org_id, report_org_name,
+                report_status, publish_time, column_id, column_name, site_id, dept_id, report_user_id,
+                report_user, report_time, review_user_id, review_user, review_time, review_note,
+                modify_user_id, modify_user, modify_time, sms_on, approval_note, approval_user, sms_group,
+                report_abstract, report_content</destTableFields>
+            <destTableKey>id</destTableKey>
+            <destTableUpdate>report_url, report_title, report_pics, report_author, report_level, report_source,
+                catalog_name, catalog_id, report_region_id, report_region_name, report_org_id, report_org_name,
+                report_status, publish_time, column_id, column_name, site_id, dept_id, report_user_id,
+                report_user, report_time, review_user_id, review_user, review_time, review_note,
+                modify_user_id, modify_user, modify_time, sms_on, approval_note, approval_user, sms_group,
+                report_abstract, report_content</destTableUpdate>
+        </job>
+
+        <job>
+            <name>文件表同步</name>
+            <cron>0/30 * * * * ?</cron>
+            <srcSql>select id, tenant_id, url, create_time from g_file_log where tenant_id=122</srcSql>
+            <destTable>g_file_log</destTable>
+            <destTableFields>id, tenant_id, url, create_time</destTableFields>
+            <destTableKey>id</destTableKey>
+            <destTableUpdate>tenant_id, url, create_time</destTableUpdate>
         </job>
     </jobs>
 </root>

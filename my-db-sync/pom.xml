@@ -7,6 +7,7 @@
     <groupId>com.mengcy</groupId>
     <artifactId>my-db-sync</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
 
     <licenses>
         <license>
@@ -135,7 +136,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.properties</include>
-                    <include>**/*.xml</include>
+                    <!--<include>**/*.xml</include>-->
                 </includes>
                 <filtering>true</filtering>
             </resource>

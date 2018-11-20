@@ -18,6 +18,7 @@ package com.mengcy.db.sync.sync.impl;
 import com.mengcy.db.sync.task.entity.JobInfo;
 import com.mengcy.db.sync.sync.DBSync;
 import com.mengcy.db.sync.task.plugin.IPlugin;
+import com.mengcy.db.sync.utils.StringUtils;
 import com.mengcy.db.sync.utils.Tool;
 import org.apache.log4j.Logger;
 import java.sql.Connection;
@@ -40,12 +41,18 @@ public class MySQLSync extends AbstractDBSync implements DBSync {
     public String assembleSQL(String srcSql, Connection conn, JobInfo jobInfo) throws SQLException {
 
         String uniqueName = Tool.generateString(6) + "_" + jobInfo.getName();
-        String[] fields = jobInfo.getDestTableFields().split(",");
+
+        String destTableFields = StringUtils.formatSql(jobInfo.getDestTableFields());
+        String[] fields = destTableFields.split(",");
         fields = this.trimArrayItem(fields);
-        String[] updateFields = jobInfo.getDestTableUpdate().split(",");
+
+        String destUpdateFields = StringUtils.formatSql(jobInfo.getDestTableUpdate());
+        String[] updateFields = destUpdateFields.split(",");
         updateFields = this.trimArrayItem(updateFields);
+
         String destTable = jobInfo.getDestTable();
         String destTableKey = jobInfo.getDestTableKey();
+
         PreparedStatement pst = conn.prepareStatement(srcSql);
         ResultSet rs = pst.executeQuery();
         StringBuffer sql = new StringBuffer();
