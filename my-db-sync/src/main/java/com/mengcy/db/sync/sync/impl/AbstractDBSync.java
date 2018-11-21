@@ -16,6 +16,9 @@
 package com.mengcy.db.sync.sync.impl;
 
 import com.mengcy.db.sync.sync.DBSync;
+import com.mengcy.db.sync.task.plugin.IFieldPlugin;
+
+import java.util.Map;
 
 /**
  * @author mengcy
@@ -24,6 +27,27 @@ import com.mengcy.db.sync.sync.DBSync;
  * @version 1.0.0
  */
 public abstract class AbstractDBSync implements DBSync {
+
+    @Override
+    public String completeSrcSql(String srcSql, Map<String, String> params) {
+
+        srcSql = srcSql.replaceAll("\r\n", "");
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            srcSql = srcSql.replaceAll(entry.getKey(), entry.getValue());
+        }
+        return srcSql;
+    }
+
+    @Override
+    public String handleField(String field, String value, Map<String, IFieldPlugin> plugins) {
+
+        IFieldPlugin plugin = null;
+        if(plugins != null) {
+            plugin = plugins.get(field);
+        }
+        return plugin == null ? value : plugin.handle(value);
+    }
+
     /**
      * 去除String数组每个元素中的空格
      * @param src 需要去除空格的数组

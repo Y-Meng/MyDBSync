@@ -17,10 +17,10 @@ package com.mengcy.db.sync.sync.impl;
 
 import com.mengcy.db.sync.task.entity.JobInfo;
 import com.mengcy.db.sync.sync.DBSync;
-import com.mengcy.db.sync.task.plugin.IPlugin;
+import com.mengcy.db.sync.task.plugin.IFieldPlugin;
 import org.apache.log4j.Logger;
 import java.sql.*;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author mengcy
@@ -33,7 +33,8 @@ public class SQLServerSync extends AbstractDBSync implements DBSync {
     private Logger logger = Logger.getLogger(SQLServerSync.class);
 
     @Override
-    public String assembleSQL(String srcSql, Connection conn, JobInfo jobInfo) throws SQLException {
+    public String assembleSQL(String srcSql, Connection conn, JobInfo jobInfo, Map<String, IFieldPlugin> plugins) throws SQLException {
+
         String fieldStr = jobInfo.getDestTableFields();
         String[] fields = jobInfo.getDestTableFields().split(",");
         fields = this.trimArrayItem(fields);
@@ -57,7 +58,6 @@ public class SQLServerSync extends AbstractDBSync implements DBSync {
             }
             sql.append(" where ").append(destTableKey).append("='").append(rs.getString(destTableKey)).append("';");
             count++;
-            // this.logger.info("第" + count + "耗时: " + (new Date().getTime() - oneStart) + "ms");
         }
         this.logger.info("总共查询到 " + count + " 条记录");
         if (rs != null) {
@@ -70,7 +70,7 @@ public class SQLServerSync extends AbstractDBSync implements DBSync {
     }
 
     @Override
-    public void executeSQL(String sql, Connection conn, List<IPlugin> plugins) throws SQLException {
+    public void executeSQL(String sql, Connection conn) throws SQLException {
 
         PreparedStatement pst = conn.prepareStatement(sql);
         pst.executeUpdate();

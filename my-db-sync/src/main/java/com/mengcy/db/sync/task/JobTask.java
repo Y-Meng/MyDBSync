@@ -28,6 +28,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author mengcy
@@ -67,14 +69,18 @@ public class JobTask implements Job {
                 return;
             }
 
+            // 系统变量
+            Map<String, String> params = new HashMap<>();
+
             DBSync dbHelper = DBSyncFactory.create(destDb.getDbtype());
             long start = System.currentTimeMillis();
-            String sql = dbHelper.assembleSQL(jobInfo.getSrcSql().replaceAll("\r\n",""), inConn, jobInfo);
+            String srcSql = dbHelper.completeSrcSql(jobInfo.getSrcSql(), params);
+            String targetSql = dbHelper.assembleSQL(srcSql, inConn, jobInfo, null);
             this.logger.info("组装SQL耗时: " + (System.currentTimeMillis() - start) + "ms");
-            if (sql != null) {
-                this.logger.info(sql);
+            if (targetSql != null) {
+                this.logger.info(targetSql);
                 long eStart = System.currentTimeMillis();
-                dbHelper.executeSQL(sql, outConn, null);
+                dbHelper.executeSQL(targetSql, outConn);
                 this.logger.info("执行SQL耗时: " + (System.currentTimeMillis() - eStart) + "ms");
             }
         } catch (SQLException e) {

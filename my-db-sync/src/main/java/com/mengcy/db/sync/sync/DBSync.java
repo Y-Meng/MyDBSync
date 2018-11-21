@@ -16,11 +16,10 @@
 package com.mengcy.db.sync.sync;
 
 import com.mengcy.db.sync.task.entity.JobInfo;
-import com.mengcy.db.sync.task.plugin.IPlugin;
-
+import com.mengcy.db.sync.task.plugin.IFieldPlugin;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author mengcy
@@ -29,21 +28,34 @@ import java.util.List;
  * @version 1.0.0
  */
 public interface DBSync {
+
     /**
-     * 组装SQL
-     * @param paramString:同步参数
-     * @param paramConnection：数据库连接
+     * 完善源SQL
+     * @param srcSql：配置源SQL
+     * @param params：系统变量
+     * @return
+     */
+    String completeSrcSql(String srcSql, Map<String, String> params);
+
+    /**
+     * 组装目标SQL
+     * @param srcSql:同步参数
+     * @param srcConn：数据库连接
      * @param paramJobInfo：同步任务
+     * @param plugins: 数据处理插件列表
      * @return
      * @throws SQLException
      */
-    String assembleSQL(String paramString, Connection paramConnection, JobInfo paramJobInfo) throws SQLException;
+    String assembleSQL(String srcSql, Connection srcConn, JobInfo paramJobInfo, Map<String, IFieldPlugin> plugins) throws SQLException;
+
+    /** 字段处理插件钩子 */
+    String handleField(String field, String value, Map<String,IFieldPlugin> plugins);
+
     /**
-     * 执行SQL
-     * @param sql：要执行的SQL语句
-     * @param conn：数据库连接
-     * @param plugins: 数据处理插件列表
+     * 执行目标SQL
+     * @param destSql：要执行的SQL语句
+     * @param destConn：目标数据库连接
      * @throws SQLException
      */
-    void executeSQL(String sql, Connection conn, List<IPlugin> plugins) throws SQLException;
+    void executeSQL(String destSql, Connection destConn) throws SQLException;
 }
